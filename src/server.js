@@ -3,6 +3,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
+import cookieParser from 'cookie-parser';
+import authRoutes from './routes/auth.routes.js';
 import { PrismaClient } from '@prisma/client';
 
 dotenv.config();
@@ -12,10 +14,13 @@ const PORT = process.env.PORT || 3000;
 
 const prisma = new PrismaClient();
 
+const corsOptions = {credentials: true, origin: process.env.FRONTEND_URL || '*'};
+
 
 // Middlewares
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
+app.use(cookieParser());
 
 // Swagger setup
 const swaggerOptions = {
@@ -28,20 +33,32 @@ const swaggerOptions = {
         
         servers: [{ url: 'http://localhost:3000' }],
     },
-    apis: ['./src/routes/*.js'],
+    components: {
+        securitySchemes: {
+            bearerAuth: {
+                type: 'http',
+                scheme: 'bearer',
+                bearerFormat: 'JWT',
+            },
+        },
+    },
+    security: [
+        {
+        bearerAuth: [],
+        },
+    ],
+    apis: ['./src/routes/*.js', './src/swagger/*.js'],
 };
 
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
 // Routes
-
-app.get('/', (req, res) =>{
-    res.send('Hello World!');
-});
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/api/auth', authRoutes);
 
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
+
+export default app;

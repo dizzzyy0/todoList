@@ -1,5 +1,0 @@
-enum taskStatus {
-    not_started
-    in_progress
-    completed
-}

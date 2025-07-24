@@ -8,7 +8,9 @@ services:
       - PORT=3000
       - DATABASE_URL=postgresql://user:root@db:5432/todolist
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+
 
   db:
     image: postgres:latest
@@ -17,6 +19,11 @@ services:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: root
       POSTGRES_DB: todolist
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d todolist"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     ports:
       - "5432:5432"
     volumes:
