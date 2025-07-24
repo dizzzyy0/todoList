@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { PrismaClient } from '@prisma/client';
+import prisma from '../prisma.js';
 
 function authenticateToken(req, res, next) {
     const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
@@ -12,8 +12,6 @@ function authenticateToken(req, res, next) {
         if (err) {
             return res.status(403).json({ message: 'Invalid authentication token' });
         }
-
-        const prisma = new PrismaClient();
         const user = await prisma.user.findUnique({
             where: { id: decoded.id },
         });

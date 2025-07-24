@@ -5,15 +5,12 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 import cookieParser from 'cookie-parser';
 import authRoutes from './routes/auth.routes.js';
-import { PrismaClient } from '@prisma/client';
+import userRoutes from './routes/user.routes.js';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
-const prisma = new PrismaClient();
-
 const corsOptions = {credentials: true, origin: process.env.FRONTEND_URL || '*'};
 
 
@@ -32,21 +29,18 @@ const swaggerOptions = {
         },
         
         servers: [{ url: 'http://localhost:3000' }],
-    },
-    components: {
-        securitySchemes: {
-            bearerAuth: {
-                type: 'http',
-                scheme: 'bearer',
-                bearerFormat: 'JWT',
+        components: {
+            securitySchemes: {
+                bearerAuth: {
+                    type: 'http',
+                    scheme: 'bearer',
+                    bearerFormat: 'JWT',
+                },
             },
         },
     },
-    security: [
-        {
-        bearerAuth: [],
-        },
-    ],
+    
+    
     apis: ['./src/routes/*.js', './src/swagger/*.js'],
 };
 
@@ -55,6 +49,8 @@ const swaggerSpec = swaggerJsdoc(swaggerOptions);
 // Routes
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+
 
 
 app.listen(PORT, () => {
