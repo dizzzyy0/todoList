@@ -6,6 +6,7 @@ import swaggerJsdoc from 'swagger-jsdoc';
 import cookieParser from 'cookie-parser';
 import authRoutes from './routes/auth.routes.js';
 import userRoutes from './routes/user.routes.js';
+import listRoutes from './routes/list.routes.js';
 
 dotenv.config();
 
@@ -15,8 +16,8 @@ const corsOptions = {credentials: true, origin: process.env.FRONTEND_URL || '*'}
 
 
 // Middlewares
-app.use(cors(corsOptions));
 app.use(express.json());
+app.use(cors(corsOptions));
 app.use(cookieParser());
 
 // Swagger setup
@@ -50,8 +51,7 @@ const swaggerSpec = swaggerJsdoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
-
-
+app.use('/api/lists', listRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
