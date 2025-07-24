@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser';
 import authRoutes from './routes/auth.routes.js';
 import userRoutes from './routes/user.routes.js';
 import listRoutes from './routes/list.routes.js';
+import taskRoutes from './routes/task.routes.js';
 
 dotenv.config();
 
@@ -47,11 +48,13 @@ const swaggerOptions = {
 
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
+
 // Routes
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/lists', listRoutes);
+app.use('/api/tasks', taskRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
