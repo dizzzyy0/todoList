@@ -19,6 +19,39 @@ async function createTask(req, res) {
     }
 }
 
+async function getTaskById(req, res) {
+    const { taskId } = req.params;
+    const userId = req.user.id;
+
+    try {
+        const task = await taskServices.getTaskById(taskId, userId);
+        if (!task) {
+            return res.status(404).json({ message: 'Task not found or you do not have permission to view it.' });
+        }
+        res.status(200).json(task);
+    } catch (error) {
+        if (error.message.includes('Forbidden')) {
+            return res.status(403).json({ message: error.message });
+        }
+        res.status(500).json({ error: error.message });
+    }
+};
+
+async function getTaskByStatus(req, res) {
+    const { status } = req.params;
+    const userId = req.user.id;
+
+    try {
+        const tasks = await taskServices.getTaskByStatus(status, userId);
+        res.status(200).json(tasks);
+    } catch (error) {
+        if (error.message.includes('Forbidden')) {
+            return res.status(403).json({ message: error.message });
+        }
+        res.status(500).json({ error: error.message });
+    }
+};
+
 async function getTasksByList(req, res) {
     const { listId } = req.params;
     const userId = req.user.id;
@@ -32,7 +65,7 @@ async function getTasksByList(req, res) {
         }
         res.status(500).json({ error: error.message });
     }
-}
+};
 
 async function updateTask(req, res) {
     const { taskId } = req.params;
@@ -50,7 +83,7 @@ async function updateTask(req, res) {
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
-}
+};
 
 async function deleteTask(req, res) {
     const { taskId } = req.params;
@@ -65,10 +98,12 @@ async function deleteTask(req, res) {
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
-}
+};
 
 export default {
     createTask,
+    getTaskById,
+    getTaskByStatus,
     getTasksByList,
     updateTask,
     deleteTask

@@ -58,6 +58,40 @@ async function getTaskById(taskId, userId) {
     return task; 
 };
 
+/**
+ * @param {string} status 
+ * @param {string} userId 
+ * @returns {Promise<Array<object>>}  
+ */
+async function getTaskByStatus(status, userId) {
+    try {
+        if (!status) {
+            throw new Error('Status is required');
+        }
+
+        const validStatuses = ['not_started', 'in_progress', 'completed'];
+
+        if (!validStatuses.includes(status)) {
+            throw new Error(`Invalid status. Valid statuses are: ${validStatuses.join(', ')}`);
+        }
+
+        const tasks = await prisma.task.findMany({
+            where: {
+                status: status,
+                list: {
+                    userId: userId,
+                },
+            },
+            select: safeTaskSelect,
+            orderBy: { createdAt: 'desc' },
+        });
+        return tasks;
+
+    } catch (error) {
+        console.error('Error fetching tasks by status:', error);
+    }
+    
+};
 
 async function getTasksByListId(listId, userId) {
     const list = await prisma.list.findFirst({
@@ -110,6 +144,7 @@ async function deleteTask(taskId, userId) {
 export default {
     createTask,
     getTaskById,
+    getTaskByStatus,
     getTasksByListId,
     updateTask,
     deleteTask

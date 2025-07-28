@@ -108,6 +108,70 @@
 
 /**
  * @swagger
+ * /api/tasks/status/{status}:
+ *   get:
+ *     summary: Get all user's tasks by status
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: status
+ *         required: true
+ *         description: The status to filter tasks by.
+ *         schema:
+ *           type: string
+ *           enum: [not_started, in_progress, completed]
+ *     responses:
+ *       200:
+ *         description: A list of tasks filtered by the specified status.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Task'
+ *       401:
+ *         description: Unauthorized.
+ *       403:
+ *         description: Forbidden.
+ *       500:
+ *         description: Internal Server Error.
+ */
+
+/**
+ * @swagger
+ * /api/tasks/{taskId}:
+ *   get:
+ *     summary: Get a specific task by ID
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: taskId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: The ID of the task to retrieve.
+ *     responses:
+ *       200:
+ *         description: The requested task object.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Task'
+ *       401:
+ *         description: Unauthorized.
+ *       404:
+ *         description: Task not found or user lacks permission.
+ *       500:
+ *         description: Internal Server Error.
+ */
+
+/**
+ * @swagger
  * /api/tasks/{taskId}:
  *   patch:
  *     summary: Update a task
