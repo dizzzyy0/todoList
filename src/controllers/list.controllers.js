@@ -31,9 +31,10 @@ async function getUserLists(req, res) {
 
 async function getListById(req, res) {
     const { listId } = req.params;
+    const userId = req.user.id;
 
     try {
-        const list = await listServices.getListById(listId);
+        const list = await listServices.getListById(listId, userId);
         if (!list) {
             return res.status(404).json({ message: 'List not found' });
         }
@@ -46,13 +47,14 @@ async function getListById(req, res) {
 async function updateList(req, res) {
     const { listId } = req.params;
     const { name } = req.body;
+    const userId = req.user.id;
 
     if (!name) {
         return res.status(400).json({ message: 'List name is required' });
     }
 
     try {
-        const updatedList = await listServices.updateListName(listId, name);
+        const updatedList = await listServices.updateListName(listId, name, userId);
         if (!updatedList) {
             return res.status(404).json({ message: 'List not found' });
         }
@@ -65,11 +67,13 @@ async function updateList(req, res) {
 async function addToGroup(req, res) {
     const { listId } = req.params;
     const { groupId } = req.body;
+    const userId = req.user.id;
+    
     if (!groupId) {
         return res.status(400).json({ message: 'Group ID is required' });
     }
     try {
-        const updatedList = await listServices.addToGroup(listId, groupId);
+        const updatedList = await listServices.addToGroup(listId, groupId, userId);
         if (!updatedList) {
             return res.status(404).json({ message: 'List not found' });
         }
@@ -81,9 +85,10 @@ async function addToGroup(req, res) {
 
 async function deleteList(req, res) {
     const { listId } = req.params;
+    const userId = req.user.id;
 
     try {
-        const deletedList = await listServices.deleteList(listId);
+        const deletedList = await listServices.deleteList(listId, userId);
         if (!deletedList) {
             return res.status(404).json({ message: 'List not found' });
         }

@@ -8,6 +8,7 @@ import authRoutes from './routes/auth.routes.js';
 import userRoutes from './routes/user.routes.js';
 import listRoutes from './routes/list.routes.js';
 import taskRoutes from './routes/task.routes.js';
+import groupRoutes from './routes/group.routes.js';
 
 dotenv.config();
 
@@ -55,6 +56,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/lists', listRoutes);
 app.use('/api/tasks', taskRoutes);
+app.use('/api/groups', groupRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

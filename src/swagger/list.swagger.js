@@ -1,5 +1,3 @@
-// swagger/list.swagger.js
-
 /**
  * @swagger
  * tags:

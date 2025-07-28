@@ -53,14 +53,18 @@ async function getUserLists(userId) {
 };
 
 
-/** * 
+/**
  * @param {string} listId
+ * @param {string} userId
  * @returns {Promise<Object|null>}
  */
-async function getListById(listId) {
+async function getListById(listId, userId) {
     try {
         const list = await prisma.list.findUnique({
-            where: { id: listId },
+            where: { 
+                id: listId,
+                userId: userId
+            },
             select: savelistSelect,
         });
         return list;
@@ -74,10 +78,24 @@ async function getListById(listId) {
 /** * 
  * @param {string} listId
  * @param {string} name
+ * @param {string} userId
  * @returns {Promise<Object|null>}
  */
-async function updateListName(listId, name) {
+async function updateListName(listId, name, userId) {
     try {
+
+        if (!name) {
+            throw new Error('List name is required');
+        }
+        
+        const existingList = await prisma.list.findUnique({
+            where: { id: listId, userId },
+        });
+        
+        if (!existingList) {
+            throw new Error('List not found or does not belong to the user');
+        }
+
         const updatedList = await prisma.list.update({
             where: { id: listId },
             data: { name },
@@ -93,10 +111,33 @@ async function updateListName(listId, name) {
 /** * 
  * @param {string} listId
  * @param {string} groupId
+ * @param {string} userId
  * @returns {Promise<Object|null>}
  */
-async function addToGroup(listId, groupId) {
+async function addToGroup(listId, groupId, userId) {
     try {
+        const existingList = await prisma.list.findUnique({
+            where: {
+                id: listId,
+                userId: userId
+            }
+        });
+
+        if (!existingList) {
+            throw new Error('List not found or does not belong to the user');
+        }
+        
+        const existingGroup = await prisma.group.findUnique({
+            where: {
+                id: groupId,
+                userId: userId
+            }
+        });
+        
+        if (!existingGroup) {
+            throw new Error('Group not found or does not belong to the user');
+        }
+
         const updatedList = await prisma.list.update({
             where: { id: listId },
             data: { groupId },
@@ -110,11 +151,23 @@ async function addToGroup(listId, groupId) {
 }
 
 /**
- * * @param {string} listId
+ * @param {string} listId
+ * @param {string} userId
  * @returns {Promise<Object|null>}
  */
-async function deleteList(listId) {
+async function deleteList(listId, userId) {
     try {
+        const existingList = await prisma.list.findUnique({
+            where: {
+                id: listId,
+                userId: userId
+            }
+        });
+        
+        if (!existingList) {
+            throw new Error('List not found or does not belong to the user');
+        }
+
         const deletedList = await prisma.list.delete({
             where: { id: listId },
             select: savelistSelect,
@@ -129,6 +182,7 @@ async function deleteList(listId) {
 export default {
     createList,
     getUserLists,
+    addToGroup,
     getListById,
     updateListName,
     deleteList,
