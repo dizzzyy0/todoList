@@ -1,14 +1,14 @@
 import authService from '../services/auth.services.js';
 
 async function register(req, res) {
-    const { email, password } = req.body;
+    const { name, email, password, confirmPassword } = req.body;
 
-    if(!email || !password) {
-        return res.status(400).json({ message: 'Email and password are required' });
+    if(!name || !email || !password || !confirmPassword) {
+        return res.status(400).json({ message: 'Name, email, password, and confirm password are required' });
     }
 
     try{
-        const newUser = await authService.registerUser(email, password);
+        const newUser = await authService.registerUser(name, email, password);
         res.status(201).json({
             message: 'User registered successfully',
             user: newUser,

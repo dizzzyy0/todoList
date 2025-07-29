@@ -2,24 +2,17 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import prisma from '../prisma.js';
 
-async function registerUser(email, password) {
-    const existingUser = await prisma.user.findUnique({
-        where: { email },
-    });
-
-    if (existingUser) {
-        throw new Error('User already exists');
-    }
-
+async function registerUser(name, email, password) {
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = await prisma.user.create({
         data: {
+            name,
             email,
             password: hashedPassword,
         },
     });
 
-    return { id: newUser.id, email: newUser.email };
+    return { id: newUser.id, email: newUser.email, name: newUser.name };
 }
 
 async function loginUser(email, password) {
@@ -43,7 +36,7 @@ async function loginUser(email, password) {
     return { 
         token, 
         user: { 
-            id: user.id, 
+            name: user.name, 
             email: user.email 
         } 
     };

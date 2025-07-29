@@ -2,6 +2,7 @@ import prisma from '../prisma.js';
 
 const safeUserSelect = {
     id: true,
+    name: true,
     email: true
 };
 
@@ -32,6 +33,23 @@ async function getAllUsers() {
 };
 
 /**
+ * @param {string} userId
+ * @returns {Promise<object>}
+ */
+async function changeUserName(userId, newName) {
+    try {
+        const updatedUser = await prisma.user.update({
+            where: { id: userId },
+            data: { name: newName },
+            select: safeUserSelect,
+        });
+        return updatedUser;
+    } catch (error) {
+        throw new Error('Could not update user name');
+    }
+};
+
+/**
  * @param {string} userId 
  * @returns {Promise<object>} 
  */
@@ -52,5 +70,6 @@ async function deleteUserById(userId) {
 export default {
     getUserById,
     getAllUsers,
+    changeUserName,
     deleteUserById,
 };

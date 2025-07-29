@@ -22,6 +22,23 @@ async function getAllUsers(req, res) {
     }
 };
 
+async function changeUserName(req, res) {
+    try {
+        const userId = req.user.id;
+        const { newName } = req.body;
+        if (!newName) {
+            return res.status(400).json({ message: 'New name is required.' });
+        }
+        const updatedUser = await userService.changeUserName(userId, newName);
+        res.status(200).json(updatedUser);
+    } catch (error) {
+        if (error.message === 'Could not update user name') {
+            return res.status(500).json({ message: error.message });
+        }
+        res.status(500).json({ message: 'Server Error', error: error.message });
+    }
+};
+
 async function deleteMyProfile(req, res) {
     try {
         const userId = req.user.id;
@@ -39,5 +56,6 @@ async function deleteMyProfile(req, res) {
 export default {
     getMyProfile,
     getAllUsers,
+    changeUserName,
     deleteMyProfile,
 };

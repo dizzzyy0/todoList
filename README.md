@@ -24,6 +24,7 @@ todoList/
 │   ├── routes/         # Маршрути API
 │   ├── services/       # Бізнес-логіка застосунку
 │   ├── swagger/        # Документація Swagger
+│   ├── validators/     # Валідація вхідних даних 
 │   ├── prisma.js       # Створення PrismaClient
 │   └── server.js       # Налаштування серверу застосунку
 ├── .env.example        # Приклад файлу змінних середовища

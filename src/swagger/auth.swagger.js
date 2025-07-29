@@ -18,9 +18,14 @@
  *           schema:
  *             type: object
  *             required:
+ *               - name
  *               - email
  *               - password
+ *               - confirmPassword
  *             properties:
+ *               name:
+ *                 type: string
+ *                 description: "User's name."
  *               email:
  *                 type: string
  *                 format: email
@@ -28,7 +33,11 @@
  *               password:
  *                 type: string
  *                 format: password
- *                 description: "User's password (min. 6 characters)."
+ *                 description: "User's password (min. 6 characters, at least one uppercase letter, one lowercase letter, and one number)."
+ *               confirmPassword:
+ *                 type: string
+ *                 format: password
+ *                 description: "User's confirm password (min. 6 characters, at least one uppercase letter, one lowercase letter, and one number)."
  *     responses:
  *       201:
  *         description: User registered successfully.
@@ -73,10 +82,12 @@
  *                 user:
  *                   type: object
  *                   properties:
- *                      id: 
- *                         type: string
- *                      email:
- *                         type: string
+ *                     name:
+ *                       type: string
+ *                     id:
+ *                       type: string
+ *                     email:
+ *                       type: string
  *       401:
  *         description: Invalid credentials.
  */
