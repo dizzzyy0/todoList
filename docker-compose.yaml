@@ -3,13 +3,12 @@ services:
     image: todo-list-app
     build: .
     ports:
-      - "3000:3000"
-    environment:
-      - PORT=3000
-      - DATABASE_URL=postgresql://user:root@db:5432/todolist
+      - "8000:8000"
     depends_on:
       db:
         condition: service_healthy
+    env_file:
+      - .env
 
 
   db:

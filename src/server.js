@@ -31,7 +31,7 @@ const swaggerOptions = {
             version: '1.0.0',
         },
         
-        servers: [{ url: 'http://localhost:3000' }],
+        servers: [{ url: 'http://localhost:8000' }],
         components: {
             securitySchemes: {
                 bearerAuth: {

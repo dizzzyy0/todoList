@@ -61,4 +61,4 @@ docker-compose up --build
 
 ## Документація API
 
-Swagger документація доступна за адресою: http://localhost:3000/api-docs
+Swagger документація доступна за адресою: http://localhost:8000/api-docs
