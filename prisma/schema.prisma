@@ -15,12 +15,14 @@ enum TaskStatus {
 
 model User {
   id       String @id @default(uuid()) @db.Uuid
-  name     String @default("")
+  name     String @default("user")
   email    String @unique
   password String
 
-  lists         List[]
-  createdGroups Group[] @relation("GroupCreator")
+  passwordResetToken   String?   @unique
+  passwordResetExpires DateTime?
+  lists                List[]
+  createdGroups        Group[]   @relation("GroupCreator")
 }
 
 model List {

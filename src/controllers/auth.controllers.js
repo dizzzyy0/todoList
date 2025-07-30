@@ -45,8 +45,38 @@ async function login(req, res) {
     }
 };
 
+async function requestPasswordReset(req, res) {
+    const { email } = req.body;
+    if(!email) {
+        return res.status(400).json({ message: 'Email is required' });
+    }
+    try {
+        await authService.requestPasswordReset(email);
+        res.status(200).json({ message: 'Password reset email sent if the email exists' });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+async function resetPassword(req, res) {
+    const { token } = req.params;
+    const { password } = req.body;
+
+    if (!token || !password) {
+        return res.status(400).json({ message: 'Token and new password are required' });
+    }
+
+    try {
+        await authService.resetPassword(token, password);
+        res.status(200).json({ message: 'Password reset successful' });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
 
 export default {
     register,
     login,
+    requestPasswordReset,
+    resetPassword,
 };

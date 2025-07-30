@@ -91,3 +91,83 @@
  *       401:
  *         description: Invalid credentials.
  */
+
+/**
+ * @swagger
+ * /api/auth/forgot-password:
+ *   post:
+ *     summary: Initiate password reset process
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: "The email address of the user who forgot their password."
+ *                 example: "user@example.com"
+ *     responses:
+ *       200:
+ *         description: "A confirmation message. For security, the response is the same whether the user exists or not."
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "If a user with this email exists, a password reset link has been sent."
+ *       400:
+ *         description: Invalid input data (e.g., malformed email).
+ *       500:
+ *         description: Connection to host refused.
+ */
+
+
+/**
+ * @swagger
+ * /api/auth/reset-password/{token}:
+ *   patch:
+ *     summary: Reset user password using a token
+ *     tags: [Auth]
+ *     parameters:
+ *       - in: path
+ *         name: token
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: "The password reset token received via email."
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - password
+ *             properties:
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 description: "The user's new password."
+ *                 example: "NewPassword123!"
+ *     responses:
+ *       200:
+ *         description: "Password has been successfully updated."
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Your password has been successfully updated."
+ *       400:
+ *         description: "Token is invalid, has expired, or the new password is weak."
+ */
